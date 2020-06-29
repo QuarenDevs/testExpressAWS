@@ -7,6 +7,8 @@ app.use(bodyParser.json())
 
 
 app.use('/api/v1/', apiRoutes)
+console.log("=======================================")
+console.log(apiRoutes)
 
 app.get('/', (req, res) => {
     res.send("welcome to server");

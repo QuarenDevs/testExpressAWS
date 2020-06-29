@@ -141,10 +141,16 @@ async function update (req, res){
    response.status(200).send("Update desde usuario " + requestedId)
 }
 
-async function destroy (req, res){
-    const requestedId = req.params.id;
+async function destroy (request, response){
+    const requestedId = request.params.id;
 
    response.status(200).send("Delete desde usuario " + requestedId)
+}
+
+async function muchosParams (request, response){
+    
+
+   response.status(200).send( request.params)
 }
 
 
@@ -164,5 +170,6 @@ module.exports = {
     update,
     destroy,
     generatePDF,
-    generatePDF2
+    generatePDF2,
+    muchosParams
 }

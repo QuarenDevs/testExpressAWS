@@ -13,7 +13,11 @@ async function index(request, response)
 
 async function show(request, response)
 {
-    
+    try {
+        response.status(200).send("Desde el ProductController SHOW")
+    } catch (error) {
+        response.status(500).send({message: e.message})
+    }
 }
 
 async function store(request, response)

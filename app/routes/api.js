@@ -1,16 +1,23 @@
 const router = require('express').Router();
 
-const productRoutes = require('./Model')('Product')
-
-
-const extrasUser = [
-    { method: 'GET', endpoint: "generatePDF", callback: 'generatePDF'},
-    { method: 'GET', endpoint: ":id/pdf", callback: 'generatePDF2'}
+const models = [
+    {
+        model:'Product'
+    },
+    {
+        model:'Order'
+    },
+    {
+        model:'User', 
+        extras:[
+            { method: 'GET', endpoint: "generatePDF", callback: 'generatePDF'},
+            { method: 'GET', endpoint: ":id/pdf", callback: 'generatePDF2'},
+            { method: 'GET', endpoint: ":id/par/:segundo/:tercero", callback: 'muchosParams'}
+        ]
+    }
 ]
-const userRoutes = require('./Model')('User', extrasUser)
 
 
-router.use('/products', productRoutes)
-router.use('/users', userRoutes)
 
+models.forEach(m => router.use('/', require('./Model')(m.model, m.extras)))
 module.exports = router

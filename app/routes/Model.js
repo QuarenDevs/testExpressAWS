@@ -1,46 +1,49 @@
-module.exports = function(modelName, extras = null) {
+module.exports = function(modelName, extras = []) {
 
     const router = require('express').Router();
 
     const controllerCallbacks = require(`../controllers/${modelName}Controller`)
     
-    if (extras != null)
+    extras.push({ method: 'GET', endpoint: "", callback: 'index'});
+    extras.push({ method: 'GET', endpoint: ":id", callback: 'show'});
+    extras.push({ method: 'POST', endpoint: "", callback: 'store'});
+    extras.push({ method: 'PUT', endpoint: ":id", callback: 'update'});
+    extras.push({ method: 'PATCH', endpoint: ":id", callback: 'update'});
+    extras.push({ method: 'DELETE', endpoint: ":id", callback: 'destroy'});
+
+    if (extras.length > 0)
     {
         extras.forEach(route => {
             var fn = route.callback.trim();
             if (fn in controllerCallbacks && typeof controllerCallbacks[fn] === "function") 
             {
+                const routePath = `/${modelName.toLowerCase()}/${route.endpoint}`
+                console.log(route.method.toLowerCase() + ": " +routePath)
+
+
                 if(route.method.toLowerCase() === "get")
                 {
-                    router.get("/" + route.endpoint, controllerCallbacks[fn])
+                    router.get(routePath, controllerCallbacks[fn])
                 }
                 else if(route.method.toLowerCase() === "post")
                 {
-                    router.post("/" + route.endpoint, controllerCallbacks[fn])
+                    router.post(routePath, controllerCallbacks[fn])
                 }
                 else if(route.method.toLowerCase() === "put")
                 {
-                    router.put("/" + route.endpoint, controllerCallbacks[fn])
+                    router.put(routePath, controllerCallbacks[fn])
                 }
                 else if(route.method.toLowerCase() === "patch")
                 {
-                    router.patch("/" + route.endpoint, controllerCallbacks[fn])
+                    router.patch(routePath, controllerCallbacks[fn])
                 }
                 else if(route.method.toLowerCase() === "delete")
                 {
-                    router.delete("/" + route.endpoint, controllerCallbacks[fn])
+                    router.delete(routePath, controllerCallbacks[fn])
                 }
             }
         });
     }  
-    
-    router.get("/", controllerCallbacks.index)
-    router.get('/:id', controllerCallbacks.show)
-    router.post('/', controllerCallbacks.store)
-    router.put('/:id', controllerCallbacks.update)
-    router.patch('/:id', controllerCallbacks.update)
-    router.delete('/:id', controllerCallbacks.destroy)
-
     
     return router;
   
