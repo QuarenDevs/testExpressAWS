@@ -1,12 +1,6 @@
-const router = require('express').Router();
+const router = require('./autoload')
 
-const models = [
-    {
-        model:'Product'
-    },
-    {
-        model:'Order'
-    },
+const extraRoutes = [
     {
         model:'User', 
         extras:[
@@ -17,7 +11,6 @@ const models = [
     }
 ]
 
+extraRoutes.forEach(m => router.use('/', require('./Model')(m.model, m.extras)))
 
-
-models.forEach(m => router.use('/', require('./Model')(m.model, m.extras)))
 module.exports = router
