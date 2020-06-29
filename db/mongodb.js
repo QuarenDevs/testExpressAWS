@@ -7,6 +7,7 @@ async function connectDB({host, port, dbName})
     const uri = `mongodb://${host}:${port}/${dbName}`
     console.log(`Supuesta conexión a ${uri}`)
     //await mongoose.connect(uri, {useNewUrlParser:true})
+    
 }
 
 module.exports = connectDB
