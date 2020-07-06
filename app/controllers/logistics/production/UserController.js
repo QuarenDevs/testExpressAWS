@@ -4,7 +4,7 @@ const modelName = "User"
 
 /**
  * @swagger
- * /api/v1/logistics/production/user:
+ * /api/v1/users:
  *      get:
  *          description: Use to to request all users. Model ${modelName}
  *          tags:
@@ -24,7 +24,7 @@ async function index(request, response)
 
 /**
  * @swagger
- * /api/v1/logistics/production/user/{id}:
+ * /api/v1/users/{id}:
  *      get:
  *          description: Use to to request all users. Model ${modelName}
  *          tags:
@@ -64,7 +64,7 @@ async function show(request, response)
 
 /**
  * @swagger
- * /api/v1/logistics/production/user/:
+ * /api/v1/users/:
  *      post:
  *          description: Use to to request all users. Model ${modelName}
  *          tags:
@@ -152,7 +152,7 @@ async function store(request, response)
 
 /**
  * @swagger
- * /api/v1/logistics/production/user/generatePDF:
+ * /api/v1/users/generatePDF:
  *      get:
  *          tags:
  *              -   User
@@ -169,7 +169,7 @@ async function generatePDF(request, response)
 
 /**
  * @swagger
- * /api/v1/logistics/production/user/{id}/generatePDF:
+ * /api/v1/users/{id}/generatePDF:
  *      get:
  *          tags:
  *              -   User
@@ -195,7 +195,7 @@ async function generatePDF2(request, response)
 
 /**
  * @swagger
- * /api/v1/logistics/production/user/:
+ * /api/v1/users/:
  *      patch:
  *          description: Use to to request all users. Model ${modelName}
  *          tags:

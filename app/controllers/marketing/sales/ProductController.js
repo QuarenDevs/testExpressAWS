@@ -1,13 +1,15 @@
 const e = require('express')
 
-const modelName = "Supply"
+const modelName = "Product"
 
 /**
  * @swagger
- * /api/v1/supplies/:
+ * /api/v1/products/:
  *      get:
  *          tags:
- *              -   Supply
+ *              -   Marketing
+ *                  -   Sales
+ *                      -   Product
  *          description: Use to to request all users. Model ${modelName}
  *          responses:
  *              '200':
@@ -24,10 +26,12 @@ async function index(request, response)
 
 /**
  * @swagger
- * /api/v1/supplies/{id}:
+ * /api/v1/products/{id}:
  *      get:
  *          tags:
- *              -   Supply
+ *              -   Marketing
+ *                  -   Sales
+ *                      -   Product
  *          description: Use to to request all users. Model ${modelName}
  *          parameters:
  *              -   in: path
@@ -64,10 +68,12 @@ async function show(request, response)
 
 /**
  * @swagger
- * /api/v1/supplies/:
+ * /api/v1/products/:
  *      post:
  *          tags:
- *              -   Supply
+ *              -   Marketing
+ *                  -   Sales
+ *                      -   Product
  *          description: Use to to request all users. Model ${modelName}
  *          parameters:
  *              -   in: path

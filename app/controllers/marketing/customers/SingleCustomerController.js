@@ -4,7 +4,7 @@ const modelName = "SingleCustomer"
 
 /**
  * @swagger
- * /api/v1/marketing/customers/singlecustomer:
+ * /api/v1/singlecustomers:
  *      get:
  *          tags:
  *              -   Marketing
@@ -27,7 +27,7 @@ async function index(request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/customers/singlecustomer/{id}:
+ * /api/v1/singlecustomers/{id}:
  *      get:
  *          tags:
  *              -   Marketing
@@ -70,7 +70,7 @@ async function show(request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/customers/singlecustomer/:
+ * /api/v1/singlecustomers/:
  *      post:
  *          tags:
  *              -   Marketing
@@ -162,7 +162,7 @@ async function store(request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/customers/singlecustomer/{id}:
+ * /api/v1/singlecustomers/{id}:
  *      put:
  *          tags:
  *              -   Marketing
@@ -218,7 +218,7 @@ async function update (request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/customers/singlecustomer/{id}:
+ * /api/v1/singlecustomers/{id}:
  *      delete:
  *          tags:
  *              -   Marketing

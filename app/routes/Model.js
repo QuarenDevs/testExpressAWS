@@ -1,3 +1,4 @@
+const pluralize = require('pluralize')
 
 function isValidHTTPMethod(method)
 {
@@ -6,12 +7,15 @@ function isValidHTTPMethod(method)
     return allowedHTTPMethods.includes(method.toLowerCase())
 }
 
-module.exports = function(router, apiPrefix, apiDocsPrefix, modelName)
+module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
 {
-    const controllerPath = `../controllers/${modelName}Controller`
+    let modelName = modelControllerPath.split("/")
+    modelName = modelName[modelName.length - 1]
 
+    const controllerPath = `../controllers/${modelControllerPath}Controller`
 
     const modelController = require(controllerPath)
+
     let { routes } = modelController
     
     // Validate params
@@ -61,16 +65,15 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelName)
         return diff
     })
 
-    
     console.log(`\n`)
-    console.log(`- Routes of Model: "${modelName}"`)
+    console.log(`- Routes of Model: "${modelName}"\t\t-\tController: "${modelControllerPath}"`)
     console.log("=".repeat(104))
     console.log("    Method\t|" + "\t".repeat(((maxLengthEndpoint/2) / 3) - 1 ) + "Endpoint" + "\t".repeat(((maxLengthEndpoint/2) / 3)  ) +"|     Controller Method")
     console.log("=".repeat(104))
     routes.forEach(route => {
         const { method, endpoint, callback} = route
         
-        const path = `${apiPrefix}/${modelName.toLowerCase()}/`
+        const path = `${apiPrefix}/${pluralize(modelName).toLowerCase()}/`
         const routeFullPath = path + endpoint
         let numberTabs = ((path.length) + maxLengthEndpoint  - routeFullPath.length)
         const extraTabulator = " ".repeat(numberTabs + 7)

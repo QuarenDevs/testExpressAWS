@@ -3,7 +3,6 @@ const path = require('path');
 const router = require('express').Router();
 const glob = require("glob")
 
-
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
@@ -32,6 +31,30 @@ module.exports = function(pApiPrefix, apiDocsPrefix)
         basepath: "/api/v1/",
         apis: []
     }
+
+    // Check for duplicates
+    let models = []
+    listControllers(initialPath, function (err, controllers) {
+        if (err) {
+          console.log('Error', err);
+        } else {
+            
+            controllers.forEach(controllerFullPath => {
+                let currentModel = controllerFullPath.split("/")
+                currentModel = currentModel[currentModel.length - 1].replace("Controller.js", "")
+                
+                if (models.includes(currentModel))
+                {
+                    throw new Error(`Duplicated Model "${currentModel}" at "${controllerFullPath}"\n`)
+                }
+                else
+                {
+                    models.push(currentModel)
+                }
+            })
+        }
+      });
+    
 
     listControllers(initialPath, function (err, controllers) {
         if (err) {

@@ -1,13 +1,15 @@
 const e = require('express')
 
-const modelName = "Supply"
+const modelName = "Person"
 
 /**
  * @swagger
- * /api/v1/supplies/:
+ * /api/v1/people:
  *      get:
  *          tags:
- *              -   Supply
+ *              -   Human Resources
+ *                  -   Team
+ *                      -   People
  *          description: Use to to request all users. Model ${modelName}
  *          responses:
  *              '200':
@@ -24,10 +26,12 @@ async function index(request, response)
 
 /**
  * @swagger
- * /api/v1/supplies/{id}:
+ * /api/v1/people/{id}:
  *      get:
  *          tags:
- *              -   Supply
+ *              -   Human Resources
+ *                  -   Team
+ *                      -   People
  *          description: Use to to request all users. Model ${modelName}
  *          parameters:
  *              -   in: path
@@ -64,10 +68,12 @@ async function show(request, response)
 
 /**
  * @swagger
- * /api/v1/supplies/:
+ * /api/v1/people/:
  *      post:
  *          tags:
- *              -   Supply
+ *              -   Human Resources
+ *                  -   Team
+ *                      -   People
  *          description: Use to to request all users. Model ${modelName}
  *          parameters:
  *              -   in: path
@@ -150,7 +156,6 @@ async function store(request, response)
     response.status(200).send(`Desde el ${modelName}Controller: store`)
 }
 
-
 async function update (request, response)
 {
     const { id } = request.params;
@@ -205,13 +210,14 @@ function validateProduct(product){
 
 module.exports = {
     routes : [
+        
         // Default Routes - Standard CRUD
         { method: 'GET', endpoint: "", callback: index},
         { method: 'GET', endpoint: ":id", callback: show},
         { method: 'POST', endpoint: "", callback: store},
         { method: 'PUT', endpoint: ":id", callback: update},
         { method: 'DELETE', endpoint: ":id", callback: destroy},
-
+        
         // Specific routes
         
     ]

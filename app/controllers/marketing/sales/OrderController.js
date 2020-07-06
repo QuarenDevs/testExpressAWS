@@ -4,7 +4,7 @@ const modelName = "Order"
 
 /**
  * @swagger
- * /api/v1/marketing/sales/order:
+ * /api/v1/orders:
  *      get:
  *          tags:
  *              -   Marketing
@@ -26,7 +26,7 @@ async function index(request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/sales/order/{id}:
+ * /api/v1/orders/{id}:
  *      get:
  *          tags:
  *              -   Marketing
@@ -68,7 +68,7 @@ async function show(request, response)
 
 /**
  * @swagger
- * /api/v1/marketing/sales/order/:
+ * /api/v1/orders/:
  *      post:
  *          tags:
  *              -   Marketing
