@@ -1,4 +1,5 @@
 const pluralize = require('pluralize')
+const { snakeCase } = require('change-case')
 
 function isValidHTTPMethod(method)
 {
@@ -66,14 +67,15 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
     })
 
     console.log(`\n`)
-    console.log(`- Routes of Model: "${modelName}"\t\t-\tController: "${modelControllerPath}"`)
+    console.log(`- Routes of Model: "${modelName}`)
+    console.log(`       Controller: "${modelControllerPath}"`)
     console.log("=".repeat(104))
-    console.log("    Method\t|" + "\t".repeat(((maxLengthEndpoint/2) / 3) - 1 ) + "Endpoint" + "\t".repeat(((maxLengthEndpoint/2) / 3)  ) +"|     Controller Method")
+    console.log("    Method\t|" + " ".repeat(((maxLengthEndpoint/2)) - 1 ) + "Endpoint" + " ".repeat((maxLengthEndpoint/2) ) +"|     Controller Method")
     console.log("=".repeat(104))
     routes.forEach(route => {
         const { method, endpoint, callback} = route
         
-        const path = `${apiPrefix}/${pluralize(modelName).toLowerCase()}/`
+        const path = `${apiPrefix}/${snakeCase(pluralize(modelName)).toLowerCase()}/`
         const routeFullPath = path + endpoint
         let numberTabs = ((path.length) + maxLengthEndpoint  - routeFullPath.length)
         const extraTabulator = " ".repeat(numberTabs + 7)
