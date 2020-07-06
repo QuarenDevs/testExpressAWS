@@ -1,8 +1,7 @@
-const Product = require('../models/Product')
 const e = require('express')
 const { func } = require('joi')
 
-const model = "Supply"
+const model = "Lot"
 
 async function index(request, response)
 {

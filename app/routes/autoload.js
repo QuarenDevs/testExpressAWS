@@ -1,27 +1,58 @@
-const router = require('express').Router();
-
 const fs = require('fs');
 const path = require('path');
-//joining path of directory 
-const directoryPath = path.join(__dirname, '../controllers');
+const router = require('express').Router();
+const glob = require("glob")
 
-//passsing directoryPath and callback function
-fs.readdir(directoryPath, (err, files) => {
-    //handling error
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    } 
-    //listing all files using forEach
-    files.forEach(function (file) {
-        if(file.includes("Controller.js"))
-        {
-            let name = file.replace("Controller.js", "")
-            let controller = {
-                model: name
+
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
+
+let apiPrefix = ""
+
+let swaggerOptions = {}
+
+function listControllers (src, callback) {
+    glob(src + '/**/*Controller.js', callback);
+  };
+
+
+module.exports = function(pApiPrefix, apiDocsPrefix)
+{
+    const initialPath = path.join(__dirname, '../controllers');
+    apiPrefix = pApiPrefix
+    swaggerOptions = {
+        swaggerDefinition: {
+            openapi: "3.0.3",
+            info: {
+                title: "Entrepreneur App",
+                description: "API para la consulta de información de emprendimientos",
+                servers: [`http://localhost:8080/${apiPrefix}/`],
             }
-            router.use('/', require('./Model')(name))
-        }
-    });
-});
+        },
+        basepath: "/api/v1/",
+        apis: []
+    }
 
-module.exports = router
+    listControllers(initialPath, function (err, controllers) {
+        if (err) {
+          console.log('Error', err);
+        } else {
+            
+            controllers.forEach(controllerFullPath => {
+                let relativePath = controllerFullPath.split("/controllers/")[1]
+   
+                let modelName = relativePath.replace("Controller.js", "")
+                
+                require('./Model')(router, apiPrefix, apiDocsPrefix, modelName)
+                
+                swaggerOptions.apis.push("./app/controllers/" + relativePath)
+
+            })
+             
+            const swaggerDocs = swaggerJsDoc(swaggerOptions)
+            router.use(apiDocsPrefix, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+        }
+      });
+      
+    return router;
+}

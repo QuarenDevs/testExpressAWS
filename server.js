@@ -9,7 +9,7 @@ async function initApp (appConfig, dbConfig)
 {
     try{
         await connectDB(dbConfig)
-        app.listen (appConfig.port, () => console.log (`iniciando servidor ${appConfig.port}`))
+        app.listen (appConfig.port, () => console.log ("=".repeat(100) + `\n\nStarting server, listening at ${appConfig.port} port`))
     }
     catch (err)
     {
