@@ -1,5 +1,5 @@
 const e = require('express')
-const { models } = require('../../../models')
+//const { models } = require('../../../models')
 const Product = require('../../../models/logistics/production/Product')
 const modelName = "Product"
 
