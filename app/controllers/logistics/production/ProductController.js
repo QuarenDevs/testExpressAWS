@@ -1,5 +1,6 @@
 const e = require('express')
-
+const { models } = require('../../../models')
+const Product = require('../../../models/logistics/production/Product')
 const modelName = "Product"
 
 /**
@@ -10,7 +11,7 @@ const modelName = "Product"
  *              -   Marketing
  *                  -   Sales
  *                      -   Product
- *          description: Use to to request all users. Model ${modelName}
+ *          description: Use to to request all products. Model Product
  *          responses:
  *              '200':
  *                  description: A successful response
@@ -18,11 +19,15 @@ const modelName = "Product"
 async function index(request, response)
 {
     try {
-        response.status(200).send(`Desde el ${modelName}Controller: index`)
+        const products = await Product.find().lean().exec()
+
+        //response.status(200).send(`Desde el ${modelName}Controller: index\n\n${products}`)
+        response.status(200).send(products)
     } catch (error) {
         response.status(500).send({message: e.message})
     }
 }
+
 
 /**
  * @swagger
@@ -32,10 +37,10 @@ async function index(request, response)
  *              -   Marketing
  *                  -   Sales
  *                      -   Product
- *          description: Use to to request all users. Model ${modelName}
+ *          description: Use to to request the product with the given id. Model Product
  *          parameters:
  *              -   in: path
- *                  name: userId
+ *                  name: id
  *                  schema:
  *                  type: integer
  *                  required: true
@@ -49,22 +54,16 @@ async function show(request, response)
     
     const { id } = request.params;
 
-    //let foundProduct = data.find(product => product.id === parseInt(requestedId));
-    try {
-        response.status(200).send(`Desde el ${modelName}Controller: Show ${id}`)
-    } catch (error) {
-        response.status(500).send({message: e.message})
-    }
-    /*
-    if ( !foundProduct )
+    let foundProduct = await findByShortId(request, response, id)
+    
+    if( foundProduct != undefined)
     {
-        res.status(404).send(`No se encuentra el producto con id ${requestedId}`)
+        console.log(id + "     " + foundProduct)
+        response.send(foundProduct);
     }
-    res.send(foundProduct);
-    */
+    
     
 }
-
 
 /**
  * @swagger
@@ -75,25 +74,12 @@ async function show(request, response)
  *                  -   Sales
  *                      -   Product
  *          description: Use to to request all users. Model ${modelName}
- *          parameters:
- *              -   in: path
- *                  name: name
+ *          requestBody:
+ *              description: Pet object that needs to be added to the store
+ *              content:
+ *              application/json:
  *                  schema:
- *                  type: integer
- *                  required: true
- *                  description: Numeric ID of the user to get
- *              -   in: path
- *                  name: price
- *                  schema:
- *                  type: integer
- *                  required: true
- *                  description: Numeric ID of the user to get
- *              -   in: path
- *                  name: units
- *                  schema:
- *                  type: integer
- *                  required: true
- *                  description: Numeric ID of the user to get
+ *              required: true
  *          responses:
  *              '200':
  *                  description: A successful response
@@ -153,21 +139,43 @@ async function store(request, response)
     } catch (error) {
         response.status(500).send({message: e.message})
     }*/
-    response.status(200).send(`Desde el ${modelName}Controller: store`)
+
+    
+    const newProduct = Product(request.body)
+
+    newProduct.save()
+
+    response.status(200).send(`Desde el ${modelName}Controller: store ${JSON.stringify(newProduct)}`)
 }
 
 
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *      put:
+ *          tags:
+ *              -   Marketing
+ *                  -   Sales
+ *                      -   Product
+ *          description: Use to to update the product with the given id. Model Product
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  schema:
+ *                  type: integer
+ *                  required: true
+ *                  description: Numeric ID of the user to get
+ *          responses:
+ *              '200':
+ *                  description: A successful response
+ */
 async function update (request, response)
 {
     const { id } = request.params;
 
-    /*
-    let foundProduct = data.find(product => product.id === parseInt(requestedId));
-    if ( !foundProduct )
-    {
-        res.status(404).send(`No se encuentra el producto con id ${requestedId}`)
-    }
+    let foundProduct = await findByShortId(request, response, id)
 
+    /*
     const {error} = validateProduct(req.body);
 
     if(error)
@@ -175,6 +183,7 @@ async function update (request, response)
         res.status(400).send(validation.error.details)
     }
     
+
     const requestedName = req.body.name;
     const requestedPrice = req.body.price;
     const requestedUnits = req.body.units;
@@ -183,22 +192,67 @@ async function update (request, response)
     foundProduct.name = requestedName;
     foundProduct.price = requestedPrice;
     foundProduct.units = requestedUnits;
-   
+   */
 
-    res.send(foundProduct);
+    if ( foundProduct != undefined )
+    {
+        response.status(200).send(foundProduct);
+        //response.status(200).send(`Desde el ${modelName}Controller: update con id: ${id}`)
 
-    */
+    }
 
-   response.status(200).send(`Desde el ${modelName}Controller: update con id: ${id}`)
+
+    
+
 }
 
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *      delete:
+ *          tags:
+ *              -   Marketing
+ *                  -   Sales
+ *                      -   Product
+ *          description: Use to to update the product with the given id. Model Product
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  schema:
+ *                  type: integer
+ *                  required: true
+ *                  description: Numeric ID of the user to get
+ *          responses:
+ *              '200':
+ *                  description: A successful response
+ */
 async function destroy (request, response)
 {
     const { id } = request.params;
 
-   response.status(200).send(`Desde el ${modelName}Controller: destroy con id: ${id}`)
+    let foundProduct = await findByShortId(request, response, id)
+    
+    if ( foundProduct != undefined )
+    {
+        response.status(200).send(foundProduct);
+        //response.status(200).send(`Desde el ${modelName}Controller: update con id: ${id}`)
+
+    }
+
 }
 
+async function findByShortId(request, response, id)
+{
+    let foundProduct = await Product.findOne({sid: id})
+    
+    if ( !foundProduct )
+    {
+        response.status(404).send({error: 404, message:`No se encuentra el producto con id ${id}`})
+        return undefined
+    }
+
+    return foundProduct
+}
 function validateProduct(product){
     const schema = Joi.object({
         name: Joi.string().min(3).required(),
