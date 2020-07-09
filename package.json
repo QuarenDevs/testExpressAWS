@@ -25,6 +25,7 @@
     "mongoose": "^5.9.20",
     "nodemon": "^2.0.4",
     "pluralize": "^8.0.0",
+    "shortid": "^2.2.15",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   }
