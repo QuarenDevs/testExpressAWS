@@ -66,12 +66,12 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
         return diff
     })
 
-    console.log(`\n`)
+    //console.log(`\n`)
     console.log(`- Routes of Model: "${modelName}`)
     console.log(`       Controller: "${modelControllerPath}"`)
-    console.log("=".repeat(104))
-    console.log("    Method\t|" + " ".repeat(((maxLengthEndpoint/2)) - 1 ) + "Endpoint" + " ".repeat((maxLengthEndpoint/2) ) +"|     Controller Method")
-    console.log("=".repeat(104))
+    //console.log("=".repeat(104))
+    // console.log("    Method\t|" + " ".repeat(((maxLengthEndpoint/2)) - 1 ) + "Endpoint" + " ".repeat((maxLengthEndpoint/2) ) +"|     Controller Method")
+    // console.log("=".repeat(104))
     routes.forEach(route => {
         const { method, endpoint, callback} = route
         
@@ -79,7 +79,7 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
         const routeFullPath = path + endpoint
         let numberTabs = ((path.length) + maxLengthEndpoint  - routeFullPath.length)
         const extraTabulator = " ".repeat(numberTabs + 7)
-        console.log(`     ${method.toUpperCase()}\t|\t${routeFullPath}${extraTabulator}|\t${callback.name}`)
+        //console.log(`     ${method.toUpperCase()}\t|\t${routeFullPath}${extraTabulator}|\t${callback.name}`)
 
 
         if(method.toLowerCase() === "get")
@@ -104,7 +104,7 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
         }
         
     });
-    console.log("=".repeat(104))
+    //console.log("=".repeat(104))
     
 
     
