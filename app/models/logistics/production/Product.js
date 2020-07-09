@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-//var shortid = require('shortid');
+const shortid = require('shortid');
 
 const Schema = mongoose.Schema
 
@@ -13,6 +13,7 @@ const Schema = mongoose.Schema
  *                  sid:
  *                      type: string 
  *                      description: Short id of the object
+ *                      readOnly: true
  *                  name:
  *                      type: string 
  *                      description: Name of the product.
@@ -25,13 +26,13 @@ const Schema = mongoose.Schema
  *                      minium: 0
  *                      description: Unitary price product.
  *                  description:
- *                      type: 
+ *                      type: string
  *                      minium: 0
  *                      description: Height of the product.
  */
 const ProductSchema = Schema({
     name: String,
-    //sid: {'type': String, 'default': shortid.generate},
+    sid: {'type': String, 'default': shortid.generate},
     size: Number,
     unitaryPrice: Number,
     imgURL: String,

@@ -21,7 +21,6 @@ async function index(request, response)
     try {
         const products = await Product.find().lean().exec()
 
-        //response.status(200).send(`Desde el ${modelName}Controller: index\n\n${products}`)
         response.status(200).send(products)
     } catch (error) {
         response.status(500).send({message: e.message})
@@ -51,18 +50,14 @@ async function index(request, response)
  */
 async function show(request, response)
 {
-    
     const { id } = request.params;
 
     let foundProduct = await findByShortId(request, response, id)
     
     if( foundProduct != undefined)
     {
-        console.log(id + "     " + foundProduct)
         response.send(foundProduct);
     }
-    
-    
 }
 
 /**
@@ -73,16 +68,22 @@ async function show(request, response)
  *              -   Marketing
  *                  -   Sales
  *                      -   Product
- *          description: Use to to request all users. Model ${modelName}
+ *          summary: Add a new product to the store
+ *          description: Add a new Product to the store
  *          requestBody:
- *              description: Pet object that needs to be added to the store
+ *              description: Product object that needs to be added to the store
  *              content:
- *              application/json:
- *                  schema:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Product'
+ *                  text/plain:
+ *                      schema:
+ *                          type: string
  *              required: true
  *          responses:
  *              '200':
  *                  description: A successful response
+ *          x-codegen-request-body-name: body
  */
 async function store(request, response)
 {
@@ -164,6 +165,16 @@ async function store(request, response)
  *                  type: integer
  *                  required: true
  *                  description: Numeric ID of the user to get
+ *          requestBody:
+ *              description: Product object that needs to be added to the store
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Product'
+ *                  text/plain:
+ *                      schema:
+ *                          type: string
+ *              required: true
  *          responses:
  *              '200':
  *                  description: A successful response
@@ -195,9 +206,15 @@ async function update (request, response)
 
     if ( foundProduct != undefined )
     {
-        response.status(200).send(foundProduct);
-        //response.status(200).send(`Desde el ${modelName}Controller: update con id: ${id}`)
+        const { name, size, unitaryPrice, description} = request.body
+        foundProduct.name = name
+        foundProduct.size = size
+        foundProduct.unitaryPrice = unitaryPrice
+        foundProduct.description = description
 
+        foundProduct.save()
+
+        response.status(200).send(foundProduct);
     }
 
 
@@ -229,13 +246,13 @@ async function destroy (request, response)
 {
     const { id } = request.params;
 
-    let foundProduct = await findByShortId(request, response, id)
+    //let foundProduct = await findByShortId(request, response, id)
     
-    if ( foundProduct != undefined )
+    //if ( foundProduct != undefined )
     {
-        response.status(200).send(foundProduct);
-        //response.status(200).send(`Desde el ${modelName}Controller: update con id: ${id}`)
+        const result = await Product.remove({sid: id})
 
+        response.status(200).send(result);
     }
 
 }
