@@ -115,7 +115,6 @@ async function store(request, response)
     data.push(newElement);
     res.send(newElement);
 
-    
 
 
     try {
