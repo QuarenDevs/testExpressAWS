@@ -8,7 +8,7 @@ function isValidHTTPMethod(method)
     return allowedHTTPMethods.includes(method.toLowerCase())
 }
 
-module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
+module.exports = function(router, apiPrefix, modelControllerPath) 
 {
     let modelName = modelControllerPath.split("/")
     modelName = modelName[modelName.length - 1]
@@ -67,7 +67,7 @@ module.exports = function(router, apiPrefix, apiDocsPrefix, modelControllerPath)
     })
 
     //console.log(`\n`)
-    console.log(`- Routes of Model: "${modelName}`)
+    console.log(`- Routes of Model: "${modelName}"`)
     console.log(`       Controller: "${modelControllerPath}"`)
     //console.log("=".repeat(104))
     // console.log("    Method\t|" + " ".repeat(((maxLengthEndpoint/2)) - 1 ) + "Endpoint" + " ".repeat((maxLengthEndpoint/2) ) +"|     Controller Method")

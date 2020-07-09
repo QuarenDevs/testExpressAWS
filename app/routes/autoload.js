@@ -10,15 +10,20 @@ let apiPrefix = ""
 
 let swaggerOptions = {}
 
-function listControllers (src, callback) {
-    glob(src + '/**/*Controller.js', callback);
-  };
+function listControllers (callback) {
+    const controllersPath = path.join(__dirname, '../controllers');
+    glob(controllersPath + '/**/*Controller.js', callback);
+};
+function listModels (callback) {
+    const modelsPath = path.join(__dirname, '../models');
+    glob(modelsPath + '/**/*.js', callback);
+};
 
 
-module.exports = function(pApiPrefix, apiDocsPrefix)
+module.exports = function(apiPrefix, apiDocsPrefix)
 {
-    const initialPath = path.join(__dirname, '../controllers');
-    apiPrefix = pApiPrefix
+    
+    //apiPrefix = pApiPrefix
     swaggerOptions = {
         swaggerDefinition: {
             openapi: "3.0.3",
@@ -29,34 +34,79 @@ module.exports = function(pApiPrefix, apiDocsPrefix)
             }
         },
         basepath: "/api/v1/",
-        apis: []
+        apis: [],
+        
+        definitions:{
+            "Product":{
+                "properties":{
+                    "uuid":{
+                        "type":"string"
+                    }
+                }
+            }
+        }
     }
 
     // Check for duplicates
-    let models = []
-    listControllers(initialPath, function (err, controllers) {
+    // Models and creation of Model's SwaggerDocs
+    
+    let registeredModels = []
+    listModels(function (err, models) {
         if (err) {
           console.log('Error', err);
         } else {
             
-            controllers.forEach(controllerFullPath => {
-                let currentModel = controllerFullPath.split("/")
-                currentModel = currentModel[currentModel.length - 1].replace("Controller.js", "")
+            models.forEach(modelFullPath => {
                 
-                if (models.includes(currentModel))
+                let relativePath = modelFullPath.split("app/models/")[1]
+
+                let currentModel = modelFullPath.split("/")
+                currentModel = currentModel[currentModel.length - 1].replace(".js", "")
+                
+                if (registeredModels.includes(currentModel))
                 {
-                    throw new Error(`Duplicated Model "${currentModel}" at "${controllerFullPath}"\n`)
+                    throw new Error(`Duplicated Model "${currentModel}" at "${modelFullPath}"\n`)
                 }
                 else
                 {
-                    models.push(currentModel)
+                    if(currentModel != "index")
+                    {
+                        console.log("Found model: " + currentModel  +"  " + relativePath)
+                        
+                        swaggerOptions.apis.push("./app/models/" + relativePath)
+                        registeredModels.push(currentModel)
+                    }
                 }
+
             })
         }
       });
-    
 
-    listControllers(initialPath, function (err, controllers) {
+      // Controller
+      let registeredControllers = []
+      listControllers(function (err, controllers) {
+          if (err) {
+            console.log('Error', err);
+          } else {
+              
+              controllers.forEach(controllerFullPath => {
+                  let currentModel = controllerFullPath.split("/")
+                  currentModel = currentModel[currentModel.length - 1].replace("Controller.js", "")
+                  
+                  if (registeredControllers.includes(currentModel))
+                  {
+                      throw new Error(`Duplicated Controller for Model "${currentModel}" at "${controllerFullPath}"\n`)
+                  }
+                  else
+                  {
+                      registeredControllers.push(currentModel)
+                  }
+              })
+          }
+        });
+
+    // Create Controller routes with SwaggerDoc
+    listControllers(function (err, controllers) {
         if (err) {
           console.log('Error', err);
         } else {
@@ -66,12 +116,13 @@ module.exports = function(pApiPrefix, apiDocsPrefix)
    
                 let modelName = relativePath.replace("Controller.js", "")
                 
-                require('./Model')(router, apiPrefix, apiDocsPrefix, modelName)
+                require('./Model')(router, apiPrefix, modelName)
                 
                 swaggerOptions.apis.push("./app/controllers/" + relativePath)
 
             })
              
+            console.log(swaggerOptions)
             const swaggerDocs = swaggerJsDoc(swaggerOptions)
             router.use(apiDocsPrefix, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
         }
