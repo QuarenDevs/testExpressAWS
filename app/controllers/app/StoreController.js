@@ -20,7 +20,11 @@ async function index(request, response)
     try {
         const stores = await Store.find().lean().exec()
 
-        response.status(200).send(stores)
+        response.status(200).send({
+            "success":"true",
+            "message": "Stores have been retrieved succesfully",
+            "data": stores
+        })
     } catch (error) {
         response.status(500).send({message: e.message})
     }
@@ -54,7 +58,11 @@ async function show(request, response)
     
     if( foundStore != undefined)
     {
-        response.send(foundStore);
+        response.send({
+            "success":"true",
+            "message": `Store with id ${id} has been retrieved succesfully`,
+            "data": foundStore
+        });
     }
 }
 
@@ -142,7 +150,11 @@ async function store(request, response)
 
     newStore.save()
 
-    response.status(200).send(`Desde el ${modelName}Controller: store ${JSON.stringify(newStore)}`)
+    response.status(200).send({
+        "success":"true",
+        "message": `The new store has been saved succesfully`,
+        "data": newStore
+    })
 }
 
 
@@ -210,7 +222,11 @@ async function update (request, response)
 
         foundStore.save()
 
-        response.status(200).send(foundStore);
+        response.status(200).send({
+            "success":"true",
+            "message": `Store with id ${id} has been updated succesfully`,
+            "data": foundStore
+        });
     }
 
 
@@ -247,7 +263,11 @@ async function destroy (request, response)
     {
         const result = await Store.remove({sid: id})
 
-        response.status(200).send(result);
+        response.status(200).send({
+            "success":"true",
+            "message": `Store with id ${id} has been deleted succesfully`,
+            "data": result
+        });
     }
 
 }

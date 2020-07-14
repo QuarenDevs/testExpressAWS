@@ -21,7 +21,11 @@ async function index(request, response)
     try {
         const products = await Product.find().lean().exec()
 
-        response.status(200).send(products)
+        response.status(200).send({
+            "success":"true",
+            "message": "Products have been retrieved succesfully",
+            "data": products
+        })
     } catch (error) {
         response.status(500).send({message: e.message})
     }
@@ -56,7 +60,11 @@ async function show(request, response)
     
     if( foundProduct != undefined)
     {
-        response.send(foundProduct);
+        response.send({
+            "success":"true",
+            "message": `Product with id ${id} has been retrieved succesfully`,
+            "data": foundProduct
+        });
     }
 }
 
@@ -145,7 +153,11 @@ async function store(request, response)
 
     newProduct.save()
 
-    response.status(200).send(`Desde el ${modelName}Controller: store ${JSON.stringify(newProduct)}`)
+    response.status(200).send({
+        "success":"true",
+        "message": `The new product has been saved succesfully`,
+        "data": newProduct
+    })
 }
 
 
@@ -214,7 +226,11 @@ async function update (request, response)
 
         foundProduct.save()
 
-        response.status(200).send(foundProduct);
+        response.status(200).send({
+            "success":"true",
+            "message": `Product with id ${id} has been updated succesfully`,
+            "data": foundProduct
+        });
     }
 
 
@@ -252,7 +268,11 @@ async function destroy (request, response)
     {
         const result = await Product.remove({sid: id})
 
-        response.status(200).send(result);
+        response.status(200).send({
+            "success":"true",
+            "message": `Product with id ${id} has been deleted succesfully`,
+            "data": result
+        });
     }
 
 }
